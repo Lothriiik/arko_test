@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <style>
+      th.qualificacao, td.qualificacao {
+        max-width: 800px;
+        width: 800px;
+        white-space: normal;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+      }
+    </style>
+    <div class="main-panel">
+      <div class="content-wrapper">
+        <div class="row">
+          <div class="col-lg-12 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title">Empresas</h4>
+                <div class="table-responsive">
+                  <form method="get" class="mb-3 d-flex gap-2 align-items-center">
+                    <label for="campo" class="mb-0">Buscar em:</label>
+                    <select name="campo" id="campo" class="form-select" style="width: 200px;">
+                      <option value="razao_social" {% if campo == 'razao_social' %}selected{% endif %}>Razão Social</option>
+                      <option value="cnpj_basico" {% if campo == 'cnpj_basico' %}selected{% endif %}>CNPJ Básico</option>
+                      <option value="natureza_juridica" {% if campo == 'natureza_juridica' %}selected{% endif %}>Natureza Jurídica</option>
+                      <option value="qualificacao_responsavel" {% if campo == 'qualificacao_responsavel' %}selected{% endif %}>Qualificação Responsável</option>
+                      <option value="porte_da_empresa" {% if campo == 'porte_da_empresa' %}selected{% endif %}>Porte da Empresa</option>
+                      <option value="ente_federativo_responsavel" {% if campo == 'ente_federativo_responsavel' %}selected{% endif %}>Ente Federativo Responsável</option>
+                    </select>
+                    <input type="text" name="termo" placeholder="Termo de busca" value="{{ termo }}" class="form-control" />
+                    <button type="submit" class="btn btn-primary">Buscar</button>
+                    <a href="{% url 'empresas' %}" class="btn btn-secondary">Limpar</a>
+                  </form>
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th> CNPJ <br>Básico </th>
+                        <th class="qualificacao"> Razão Social </th>
+                        <th> Natureza <br>Jurídica </th>
+                        <th> Qualificacão <br>Responsável </th>
+                        <th> Capital <br>Social </th>
+                        <th> Porte <br>da <br>Empresa </th>
+                        <th> Ente <br>Federativo <br>Responsável </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for empresa in empresas %}
+                      <tr>
+                        <td>{{ empresa.cnpj_basico }}</td>
+                        <td class="qualificacao">{{ empresa.razao_social }}</td>
+                        <td>{{ empresa.natureza_juridica }}</td>
+                        <td>{{ empresa.qualificacao_responsavel }}</td>
+                        <td>{{ empresa.capital_social }}</td>
+                        <td>{{ empresa.porte_da_empresa }}</td>
+                        <td>{{ empresa.ente_federativo_responsavel }}</td>
+                      </tr>
+                      {% empty %}
+                        <tr>
+                          <td colspan="7">Nenhuma empresa encontrada.</td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                  <p class="text-muted mt-3">
+                    Mostrando <strong>{{ quantidade_mostrada }}</strong> de <strong>{{ total_empresas }}</strong> empresas no total.
+                  </p>
+                  
+                  <nav aria-label="Navegação de páginas" class="mt-3">
+                    <ul class="pagination justify-content-center">
+                      {% if tem_anterior %}
+                        <li class="page-item">
+                          <a href="?prev_id={{ novo_prev_id }}" class="page-link">&laquo; Página Anterior</a>
+                        </li>
+                      {% else %}
+                        <li class="page-item disabled">
+                          <span class="page-link">&laquo; Página Anterior</span>
+                        </li>
+                      {% endif %}
+                      {% if tem_mais %}
+                        <li class="page-item">
+                          <a href="?last_id={{ novo_last_id }}" class="page-link">Próxima Página &raquo;</a>
+                        </li>
+                      {% else %}
+                        <li class="page-item disabled">
+                          <span class="page-link">Próxima Página &raquo;</span>
+                        </li>
+                      {% endif %}
+                    </ul>
+                  </nav>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+{% endblock %}
